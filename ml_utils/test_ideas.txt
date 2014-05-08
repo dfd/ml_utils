@@ -72,5 +72,18 @@ plu.univariate_plots(df, ['four','three'], 'one')
 plu.make_boxplot(df, ['one','three', 'four'], ['three','four'])
 
 
+pu.impute_by_groups(df, 'one', ['three'], 'median')
 
+fig = plt.figure()
+ax1 = fig.add_subplot(211)
+stats.probplot(df['one'].values, dist=stats.norm, plot=ax1)
+ax1.set_xlabel('')
+ax1.set_title('Probplot against normal distribution')
+
+ax2 = fig.add_subplot(212)
+xt, _ = stats.boxcox(df['one'].values)
+stats.probplot(xt, dist=stats.norm, plot=ax2)
+ax2.set_title('Probplot after Box-Cox transformation')
+
+plt.show()
 

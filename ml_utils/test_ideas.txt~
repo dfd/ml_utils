@@ -68,6 +68,9 @@ pu.convert_col_type(df, ['one', 'two'], 'int')
 
 
 from ml_utils import plot_utils as plu
+plu.univariate_plots(df, ['four','three'], 'one')
 plu.make_boxplot(df, ['one','three', 'four'], ['three','four'])
+
+
 
 
