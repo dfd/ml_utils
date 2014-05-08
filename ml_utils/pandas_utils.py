@@ -3,6 +3,7 @@
 
 import pandas as pd
 import numpy as np
+from scipy import stats
 
 def get_num_char_vars(data, missing=False, limit=None):
     """ Return lists of column names for numeric and character columns
@@ -253,8 +254,23 @@ def keep_only_values(data, col, value):
 
 
 def drop_correlated(data, cols, threshold):
-    corrs = data[num_vars].corr()
-    cols = corrs.columns
-    rows = corrs.index
-    corrs_true = abs(corrs.values) > 0.7
-    corr_df = pd.DataFrame(corrs_true, index=rows, columns = cols)
+    #corrs = data[num_vars].corr()
+    #cols = corrs.columns
+    #rows = corrs.index
+    #corrs_true = abs(corrs.values) > 0.7
+    #corr_df = pd.DataFrame(corrs_true, index=rows, columns = cols)
+    pass
+
+
+def append_boxcox(data, cols, drop_old=False):
+    """Apply boxcox transformations to a list of columns
+    data: a pandas DataFrame
+    cols: a list of column names for which to perform boxcox transformations
+    """
+    if isinstance(cols, basestring):
+        cols = [cols]
+
+    for col in cols:
+        data[col + '_boxcox'] = stats.boxcox(data[col])[0]
+        if drop_old:
+            data.drop(col, axis=1, inplace=True)
