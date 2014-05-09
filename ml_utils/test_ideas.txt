@@ -67,6 +67,25 @@ pu.convert_col_type(df, ['one', 'two'], 'str', True)
 pu.convert_col_type(df, ['one', 'two'], 'int')
 
 
+num_samples = 400
+
+# The desired mean values of the sample.
+mu = np.array([5.0, 0.0, 10.0])
+
+# The desired covariance matrix.
+r = np.array([
+        [  3.40, -2.75, -2.00],
+        [ -2.75,  5.50,  1.50],
+        [ -2.00,  1.50,  1.25]
+    ])
+
+y = np.random.multivariate_normal(mu, r, size=num_samples)
+
+df2 = pd.DataFrame(y)
+
+
+
+
 from ml_utils import plot_utils as plu
 plu.univariate_plots(df, ['four','three'], 'one')
 plu.make_boxplot(df, ['one','three', 'four'], ['three','four'])

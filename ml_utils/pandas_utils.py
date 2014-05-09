@@ -253,13 +253,23 @@ def keep_only_values(data, col, value):
 
 
 
-def drop_correlated(data, cols, threshold):
-    #corrs = data[num_vars].corr()
-    #cols = corrs.columns
-    #rows = corrs.index
-    #corrs_true = abs(corrs.values) > 0.7
-    #corr_df = pd.DataFrame(corrs_true, index=rows, columns = cols)
-    pass
+def drop_correlated(data, cols=None, threshold=0.7):
+    """Drop columns with high correlations to other variables
+    data: a pandas DataFrame
+    cols: a list of columns to consider, in order of preference to keep.
+        If None, all numeric columns are considered, ordered by the dataframe
+    threshold: a value between 0 and 1 representing the maximum absolute value
+        of correlation that will be kept
+    """
+    if not cols:
+        cols = get_num_char_vars(data)[0]
+
+    corrs = data[cols].corr()
+    abs_corrs = pd.DataFrame(abs(corrs))
+    for i in range(len(cols)):
+        for j in range(i+1, len(cols)):
+            if abs_corrs.ix[i,j] > threshold:
+                del data[cols[j]]
 
 
 def append_boxcox(data, cols, drop_old=False):
