@@ -106,3 +106,16 @@ ax2.set_title('Probplot after Box-Cox transformation')
 
 plt.show()
 
+
+
+from ml_utils import sklearn_utils as su
+from sklearn.grid_search import GridSearchCV
+
+from sklearn.svm import LinearSVC
+grid = GridSearchCV(LinearSVC(), param_grid={'C': [1, 10]}, scoring=su.ks_scorer)
+
+from sklearn.datasets import make_classification
+data = make_classification()
+grid.fit(data[0], data[1])
+grid.best_params_
+grid.best_score_
