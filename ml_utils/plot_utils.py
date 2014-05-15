@@ -8,7 +8,9 @@ from itertools import cycle
 from matplotlib.colors import hex2color
 from  matplotlib.colors import colorConverter as cc
 from matplotlib.colors import rgb_to_hsv, hsv_to_rgb
-from sklearn_utils import ks
+
+from sklearn_utils import ks, profit
+import pandas as pd
 
 single_rgb_to_hsv=lambda rgb: rgb_to_hsv( array(rgb).reshape(1,1,3) ).reshape(3)
 single_hsv_to_rgb=lambda hsv: hsv_to_rgb( array(hsv).reshape(1,1,3) ).reshape(3)
@@ -124,10 +126,24 @@ def make_boxplot(data, cols, byvar, figsize=(6,4), ylim=None):
 def plot_ks(model, X, y):
     # model needs predict_proba()
     df = ks(y, model.predict_proba(X)[:,1])
+    df.set_index('quantile', drop=True, inplace=True)
     with pd.plot_params.use('x_compat', True):
         df.true_pct.plot(color='r')
         df.false_pct.plot(color='g')
         df.random.plot()
         plt.vlines(df['ks'].argmax(), 0, 100)
+
+    plt.show()
+
+
+def plot_profit(model, X, y, cost, revenue):
+    # model needs predict_proba()
+    print model.predict_proba(X)[:,1]
+    df = profit(y, model.predict_proba(X)[:,1], cost, revenue)
+    df.set_index('quantile', drop=True, inplace=True)
+    with pd.plot_params.use('x_compat', True):
+        df.profit.plot(color='r')
+        df.random.plot()
+        plt.vlines(df['profit'].argmax(), df['random'][df['profit'].argmax()], df['profit'].max())
 
     plt.show()

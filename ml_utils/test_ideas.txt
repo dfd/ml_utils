@@ -119,3 +119,7 @@ data = make_classification()
 grid.fit(data[0], data[1])
 grid.best_params_
 grid.best_score_
+
+
+mydf = pd.DataFrame(np.hstack((data[1], data[0])))
+
