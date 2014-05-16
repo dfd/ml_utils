@@ -124,6 +124,11 @@ def make_boxplot(data, cols, byvar, figsize=(6,4), ylim=None):
 
 
 def plot_ks(model, X, y):
+    """Score and plot the lift of a model on a dataset
+    model: an sklearn model that give probability scores
+    X: a numpy array of input data for model
+    y: a numpy array of labels for input data
+    """
     # model needs predict_proba()
     df = ks(y, model.predict_proba(X)[:,1])
     df.set_index('quantile', drop=True, inplace=True)
@@ -136,14 +141,20 @@ def plot_ks(model, X, y):
     plt.show()
 
 
-def plot_profit(model, X, y, cost, revenue):
+def plot_profit(model, X, y, cost, margin):
+    """Score and plot the profitability of a model on a dataset
+    model: an sklearn model that give probability scores
+    X: a numpy array of input data for model
+    y: a numpy array of labels for input data
+    """
     # model needs predict_proba()
     print model.predict_proba(X)[:,1]
-    df = profit(y, model.predict_proba(X)[:,1], cost, revenue)
+    df = profit(y, model.predict_proba(X)[:,1], cost, margin)
     df.set_index('quantile', drop=True, inplace=True)
     with pd.plot_params.use('x_compat', True):
         df.profit.plot(color='r')
         df.random.plot()
-        plt.vlines(df['profit'].argmax(), df['random'][df['profit'].argmax()], df['profit'].max())
+        plt.vlines(df['profit'].argmax(), df['random'][df['profit'].argmax()],
+                df['profit'].max())
 
     plt.show()

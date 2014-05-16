@@ -151,8 +151,9 @@ def impute_by_groups(data, cols, groupbys, impute_type):
     data: a pandas DataFrame
     cols: a list of names of columns to be imputed
     groupbys: an ordered list of columns from which to base the imputation
-    impute_type: "mean" or "median"
+    impute_type: "mean" or "median" or "mode"
     dataframe
+    mode option doesn't work yet
     """
 
     if isinstance(cols, basestring):
@@ -172,6 +173,9 @@ def impute_by_groups(data, cols, groupbys, impute_type):
 
         elif impute_type=="mean":
             data[col].fillna(data[col].mean(), inplace=True)
+
+        elif impute_type="mode":
+            data[col].fillna(data[col].mode()[0], inplace=True)
 
 
 def standardize_dataframe(data, sd=1, drop_last_dummy=True):
