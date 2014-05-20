@@ -8,10 +8,10 @@ pandas_utils.get_num_char_vars(df2)
 
 from pandas import Series
 
-d = {'one' : Series([1., 2., 3., 4., 5., 6., 7.], index=['a', 'b', 'c', 'd', 'e', 'f', 'g']),
-         'two' : Series([1.1, 2.2, 3.3, 4.4], index=['a', 'b', 'c', 'd']),
-         'three' : Series(['z','z','x','y','x','y','u','w'], index=['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']),
-         'four' : Series(['a','a','b','b','c','c','c','d'], index=['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'])
+d = {'one' : pd.Series([1., 2., 3., 4., 5., 6., 7.], index=['a', 'b', 'c', 'd', 'e', 'f', 'g']),
+         'two' : pd.Series([1.1, 2.2, 3.3, 4.4], index=['a', 'b', 'c', 'd']),
+         'three' : pd.Series(['z','z','x','y','x','y','u','w'], index=['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']),
+         'four' : pd.Series(['a','a','b','b','c','c','c','d'], index=['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'])
 
 }
 

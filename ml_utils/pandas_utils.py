@@ -47,7 +47,7 @@ def drop_under_threshold(data, threshold=None):
     data.drop(num_vars + char_vars, inplace=True, axis=1)
 
 
-def print_unique_values(data, var_list=None):
+def get_unique_values(data, var_list=None):
     """Print the unique values for either a list of variables or all character
     variables
     data: a pandas DataFrame
@@ -60,9 +60,14 @@ def print_unique_values(data, var_list=None):
     if isinstance(var_list, basestring):
         var_list = [var_list]
 
+    vals = {}
+
     for col in var_list:
-        print col
-        print data[col].unique()
+        vals[col] = data[col].unique()
+
+    return vals
+        #print col
+        #print data[col].unique()
 
 
 def to_str(s, integer=True):
@@ -174,7 +179,7 @@ def impute_by_groups(data, cols, groupbys, impute_type):
         elif impute_type=="mean":
             data[col].fillna(data[col].mean(), inplace=True)
 
-        elif impute_type="mode":
+        elif impute_type=="mode":
             data[col].fillna(data[col].mode()[0], inplace=True)
 
 
