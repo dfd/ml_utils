@@ -62,7 +62,7 @@ df['new_var2'] = df.apply(lambda f : pu.to_int(f['new_var']), axis = 1)
 
 
 pu.convert_col_type(df, ['one', 'two'], 'str')
-pu.convert_col_type(df, ['one', 'two'], 'float', False)
+pu.convert_col_type(df, ['one', 'two'], 'float')
 pu.convert_col_type(df, ['one', 'two'], 'str', True)
 pu.convert_col_type(df, ['one', 'two'], 'int')
 

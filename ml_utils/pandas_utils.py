@@ -99,11 +99,16 @@ def to_int(s):
         return s1
 
     except ValueError:
-        return s
+        try:
+            s1 = int(round(float(s)))
+            return s1
+
+        except ValueError:
+            return s
 
 
 def to_float(s):
-    """Convert a column to ints
+    """Convert a column to floats
     usage: new_var = data.apply(lambda f : to_int(f['COLNAME']) , axis = 1)
     """
 
@@ -159,6 +164,7 @@ def impute_by_groups(data, cols, groupbys, impute_type):
     impute_type: "mean" or "median" or "mode"
     dataframe
     mode option doesn't work yet
+    ********** need to add most_frequent option ********
     """
 
     if isinstance(cols, basestring):
@@ -170,7 +176,8 @@ def impute_by_groups(data, cols, groupbys, impute_type):
     for col in cols:
         for gb in groupbys:
             data[col].fillna(data.groupby(gb)[col].transform(impute_type),
-                    inplace=True)
+                        inplace=True)
+
 
         #for remaining missing values, impute based on all non-missing values
         if impute_type=="median":
@@ -181,6 +188,11 @@ def impute_by_groups(data, cols, groupbys, impute_type):
 
         elif impute_type=="mode":
             data[col].fillna(data[col].mode()[0], inplace=True)
+
+               df = count_nonmissing_by_group(data, col)
+                df.sort(col, ascending=False, inplace=True)
+                data[col].fillna(df.ix[0,col], inplace=True)
+
 
 
 def standardize_dataframe(data, sd=1, drop_last_dummy=True):
@@ -244,6 +256,22 @@ def mean_by_group(data, col, groupby):
     df.set_index(groupby, inplace=True)
     df = df[[col, 'count']]
     return df
+
+
+def count_nonmissing_by_group(data, groupby):
+    """Return a DataFrame containing the values and counts,
+    grouped by a variable
+    data: a pandas DataFrame
+    col: the name of the column to be averaged
+    groupby: the name of the column to group the records by
+    """
+
+    data = data[pd.notnull(data[groupby])]
+    df = pd.DataFrame({groupby:data[groupby].unique(),
+            'count': data.groupby(groupby).count().ix[data[groupby].unique(),
+            groupby].values})
+    return df
+
 
 
 def keep_only_values(data, col, value):
