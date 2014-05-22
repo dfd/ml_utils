@@ -189,10 +189,8 @@ def impute_by_groups(data, cols, groupbys, impute_type):
         elif impute_type=="mode":
             data[col].fillna(data[col].mode()[0], inplace=True)
 
-               df = count_nonmissing_by_group(data, col)
-                df.sort(col, ascending=False, inplace=True)
-                data[col].fillna(df.ix[0,col], inplace=True)
-
+        elif impute_type=="most_frequent":
+            data[col].fillna(data[col].value_counts().idxmax(), inplace=True)
 
 
 def standardize_dataframe(data, sd=1, drop_last_dummy=True):
