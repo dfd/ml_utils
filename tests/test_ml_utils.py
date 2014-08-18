@@ -156,13 +156,11 @@ class TestPandasUtilsWithDataFrame(unittest.TestCase):
 
 
     def test_impute_list_by_groups_mode(self):
-        values = [1.1, 2.2, 3.3, 4.4, 3.3, 4.4, 3.85]
+        self.df['three']['g'] = 'z'
         pu.impute_by_groups(self.df, 'six', 'three', 'mode')
-        self.assertEqual(self.df.six[7], 4)
-        self.assertEqual(self.df.two[4], 3.3)
-        self.assertEqual(self.df.two[5], 4.4)
-        self.assertEqual(self.df.two[6], 3.85)
-        self.assertEqual(round(self.df.two[7],5), round(sum(values)/float(len(values)),5))
+        self.assertEqual(self.df.six[5], 'two')
+        self.assertEqual(self.df.six[6], 'one')
+        self.assertEqual(self.df.six[7], 'two')
 
     def tearDown(self):
         pass

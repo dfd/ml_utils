@@ -175,9 +175,22 @@ def impute_by_groups(data, cols, groupbys, impute_type):
 
     for col in cols:
         for gb in groupbys:
-            data[col].fillna(data.groupby(gb)[col].transform(impute_type),
-                        inplace=True)
-
+            if impute_type in ('mean', 'median'):
+                data[col].fillna(data.groupby(gb)[col].transform(impute_type),
+                            inplace=True)
+            elif impute_type in ('mode', 'most_freqent'):
+                #find each level of group by for which there are missing values
+                missing = data[col].isnull()
+                levels = data[gb][missing].unique()
+                #for each of these levels, find rows that are missing
+                for level in levels:
+                    subset = data[col][data[gb]==level]
+                    missing = subset.isnull()
+                    #find mode of non-missing values
+                    try:
+                        data[col][missing[missing==True].index.values] = subset.value_counts().idxmax()
+                    except ValueError:
+                        pass
 
         #for remaining missing values, impute based on all non-missing values
         if impute_type=="median":
@@ -186,10 +199,7 @@ def impute_by_groups(data, cols, groupbys, impute_type):
         elif impute_type=="mean":
             data[col].fillna(data[col].mean(), inplace=True)
 
-        elif impute_type=="mode":
-            data[col].fillna(data[col].mode()[0], inplace=True)
-
-        elif impute_type=="most_frequent":
+        elif impute_type in ("mode", "most_frequent"):
             data[col].fillna(data[col].value_counts().idxmax(), inplace=True)
 
 
