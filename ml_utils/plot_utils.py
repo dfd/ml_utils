@@ -115,7 +115,7 @@ def make_boxplot(data, cols, byvar, figsize=(6,4), ylim=None):
 
     #plt.figure()
     plt.rcParams['figure.figsize'] = figsize
-    bp = data[cols].boxplot(by=byvar)
+    bp = data.boxplot(column=cols, by=byvar)
     bp.set_axis_bgcolor([0.9]*3)
     if ylim:
         bp.set_ylim(ylim)
@@ -138,6 +138,7 @@ def plot_ks(model, X, y):
         df.random.plot()
         plt.vlines(df['ks'].argmax(), 0, 100)
 
+    plt.ylim(ymin=0)
     plt.show()
 
 

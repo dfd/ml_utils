@@ -16,8 +16,7 @@ class ModelAverage(BaseEstimator):
         
     def fit(self, X, y=None):
         self.model_a.fit(X,y)
-        self.model_b.fit(X,y)
-        
+        self.model_b.fit(X,y)        
         return self
 
     def predict_proba(self, X):

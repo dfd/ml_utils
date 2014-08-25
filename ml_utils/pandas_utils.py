@@ -168,12 +168,15 @@ def impute_by_groups(data, cols, groupbys, impute_type):
     """
 
     if isinstance(cols, basestring):
+        print "creating list"
         cols = [cols]
 
     if isinstance(groupbys, basestring):
         groupbys = [groupbys]
 
+    print "cols", cols
     for col in cols:
+        print "col", col
         for gb in groupbys:
             if impute_type in ('mean', 'median'):
                 data[col].fillna(data.groupby(gb)[col].transform(impute_type),
@@ -184,13 +187,14 @@ def impute_by_groups(data, cols, groupbys, impute_type):
                 levels = data[gb][missing].unique()
                 #for each of these levels, find rows that are missing
                 for level in levels:
-                    subset = data[col][data[gb]==level]
-                    missing = subset.isnull()
-                    #find mode of non-missing values
-                    try:
-                        data[col][missing[missing==True].index.values] = subset.value_counts().idxmax()
-                    except ValueError:
-                        pass
+                    if not np.isnan(level):
+                        subset = data[col][data[gb]==level]
+                        missing = subset.isnull()
+                        #find mode of non-missing values
+                        try:
+                            data[col][missing[missing==True].index.values] = subset.value_counts().idxmax()
+                        except ValueError:
+                            pass
 
         #for remaining missing values, impute based on all non-missing values
         if impute_type=="median":
@@ -326,6 +330,8 @@ def append_boxcox(data, cols, drop_old=False):
         cols = [cols]
 
     for col in cols:
+        # boxcox also returns maxlog, the lambda param that is choosen
+        # could be used for pipelining objects
         data[col + '_boxcox'] = stats.boxcox(data[col])[0]
         if drop_old:
             data.drop(col, axis=1, inplace=True)
